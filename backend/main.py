@@ -5,8 +5,7 @@ from datetime import datetime
 import pytz
 
 from database import SessionLocal, Bewerbung, engine
-
-
+from scraping import extract_data
 
 
 app = FastAPI()
@@ -29,12 +28,15 @@ def get_db():
 
 @app.get("/hello")
 def read_root():
-    return {"message": "Tage hier die URL zur ausgeschriebenen Stelle ein"}
+    return {"message": "Trage hier die URL zur ausgeschriebenen Stelle ein (keine Linkedin-URL)"}
 
 @app.post("/submit-url")
 async def submit_url(request: Request, db: Session = Depends(get_db)):
     data = await request.json()
     url = data.get("url")
+    
+    # extracted_url = extract_data(url)
+    
     now = datetime.now(tz=pytz.timezone("Europe/Berlin")).strftime("%Y-%m-%d %H:%M:%S")
     db_bewerbung = Bewerbung(
         url=url,

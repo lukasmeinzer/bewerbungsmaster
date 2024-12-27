@@ -152,7 +152,7 @@ function App() {
       <div style={listStyle}>
         <h2>Deine Bewerbungen</h2>
         <div style={headerStyle}>
-          <span>Deine Bewerbung</span>
+          <span>Bewerbung</span>
           <span>Rückmeldung</span>
         </div>
         <ul>
