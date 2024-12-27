@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "bewerbungsmaster"
+version = "0.1.0"
+description = ""
+authors = ["lukas <lukas.meinzer.98@web.de>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.115.6"
+uvicorn = "^0.34.0"
+SQLAlchemy = "^2.0.36"
+pytz = "^2024.2"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
