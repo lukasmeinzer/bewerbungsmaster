@@ -2,35 +2,34 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 
 function App() {
-  const [message, setMessage] = useState('');
   const [url, setUrl] = useState('');
   const [bewerbungen, setBewerbungen] = useState([]);
   const [feedback, setFeedback] = useState({});
   const [hoveredItem, setHoveredItem] = useState(null);
   const [hoverTimeout, setHoverTimeout] = useState(null);
+  const [username, setUsername] = useState(localStorage.getItem('username') || '');
+  const [inputUsername, setInputUsername] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:8000/hello')
-      .then(response => response.json())
-      .then(data => setMessage(data.message));
-
-    fetch('http://localhost:8000/bewerbungen')
-      .then(response => response.json())
-      .then(data => {
-        setBewerbungen(data);
-        const initialFeedback = {};
-        data.forEach(bewerbungEntry => {
-          if (bewerbungEntry.rückmeldung_positiv) {
-            initialFeedback[bewerbungEntry.id] = 'positive';
-          } else if (bewerbungEntry.rückmeldung_negativ) {
-            initialFeedback[bewerbungEntry.id] = 'negative';
-          } else {
-            initialFeedback[bewerbungEntry.id] = '';
-          }
+    if (username) {
+      fetch(`http://localhost:8000/bewerbungen?username=${username}`)
+        .then(response => response.json())
+        .then(data => {
+          setBewerbungen(data);
+          const initialFeedback = {};
+          data.forEach(bewerbungEntry => {
+            if (bewerbungEntry.rückmeldung_positiv) {
+              initialFeedback[bewerbungEntry.id] = 'positive';
+            } else if (bewerbungEntry.rückmeldung_negativ) {
+              initialFeedback[bewerbungEntry.id] = 'negative';
+            } else {
+              initialFeedback[bewerbungEntry.id] = '';
+            }
+          });
+          setFeedback(initialFeedback);
         });
-        setFeedback(initialFeedback);
-      });
-  }, []);
+    }
+  }, [username]);
 
   const handleInputChange = (event) => {
     setUrl(event.target.value);
@@ -42,14 +41,14 @@ function App() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ url }),
+      body: JSON.stringify({ url, username }),
     })
       .then(response => response.json())
       .then(data => {
         console.log(data.message);
         setUrl('');
         // Fetch the updated list of URLs
-        fetch('http://localhost:8000/bewerbungen')
+        fetch(`http://localhost:8000/bewerbungen?username=${username}`)
           .then(response => response.json())
           .then(data => {
             setBewerbungen(data);
@@ -102,6 +101,31 @@ function App() {
     setHoveredItem(null);
   };
 
+  const handleUsernameChange = (event) => {
+    setInputUsername(event.target.value);
+  };
+
+  const handleUsernameSubmit = () => {
+    localStorage.setItem('username', inputUsername);
+    setUsername(inputUsername);
+  };
+
+  if (!username) {
+    return (
+      <div className="username-container">
+        <span>Gib hier deinen Nutzernamen ein.</span>
+        <span>Nutze etwas einfaches, da du dich hiermit identifizieren wirst.</span>
+        <input
+          type="text"
+          value={inputUsername}
+          onChange={handleUsernameChange}
+          placeholder="Enter your username"
+        />
+        <button onClick={handleUsernameSubmit}>Submit</button>
+      </div>
+    );
+  }
+
   return (
     <div className="container">
       <div className="list">
@@ -146,7 +170,9 @@ function App() {
         </ul>
       </div>
       <div className="content">
-        <h1>{message}</h1>
+        <h1>Bewerbungsmaster</h1>
+        <h3>Gib im untenstehenden Eingabefeld die URL zur ausgeschriebenen Stelle ein.</h3>
+        <span>(Linkedin URLs funktionieren nicht)</span>
         <div className="input-container">
           <input
             type="text"
@@ -156,6 +182,9 @@ function App() {
           />
           <button onClick={handleConfirmClick}>Confirm</button>
         </div>
+      </div>
+      <div className="username-display">
+        Username: {username}
       </div>
     </div>
   );

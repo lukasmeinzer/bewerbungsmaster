@@ -12,6 +12,7 @@ class Bewerbung(Base):
     __tablename__ = "Bewerbungen"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     url = Column(String, index=True)
+    username = Column(String, index=True)
     beworben_am = Column(String)
     firmenname = Column(String)
     jobtitel = Column(String)

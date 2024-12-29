@@ -26,24 +26,25 @@ def get_db():
     finally:
         db.close()
 
-@app.get("/hello")
-def read_root():
-    return {"message": "Trage hier die URL zur ausgeschriebenen Stelle ein (keine Linkedin-URL)"}
-
 @app.post("/submit-url")
 async def submit_url(request: Request, db: Session = Depends(get_db)):
     data = await request.json()
     url = data.get("url").strip()
+    username = data.get("username").strip()
     
     url_vorhanden = db.query(Bewerbung).filter(Bewerbung.url == url).first()
     if url_vorhanden:
         return {"error": "URL bereits vorhanden"}
     
-    extracted_url = extract_data(url)
+    try:
+        extracted_url = extract_data(url)
+    except Exception as e:
+        return {"error": f"Error while extracting data: {e}"}
     
     now = datetime.now(tz=pytz.timezone("Europe/Berlin")).strftime("%Y-%m-%d %H:%M:%S")
     db_bewerbung = Bewerbung(
         url=url,
+        username=username,
         beworben_am=now,
         firmenname=extracted_url.get("company_name"),
         jobtitel=extracted_url.get("job_title"),
@@ -56,8 +57,8 @@ async def submit_url(request: Request, db: Session = Depends(get_db)):
 
 
 @app.get("/bewerbungen")
-def get_bewerbungen(db: Session = Depends(get_db)):
-    bewerbungen = db.query(Bewerbung).all()
+def get_bewerbungen(username:str, db: Session = Depends(get_db)):
+    bewerbungen = db.query(Bewerbung).filter(Bewerbung.username == username).all()
     return bewerbungen
 
 @app.post("/update-feedback")
