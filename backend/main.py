@@ -82,6 +82,15 @@ def get_bewerbungen(username:str, db: Session = Depends(get_db)):
     bewerbungen = db.query(Bewerbung).filter(Bewerbung.username == username).all()
     return bewerbungen
 
+@app.delete("/delete-bewerbung/{id}")
+async def delete_bewerbung(id: int, db: Session = Depends(get_db)):
+    bewerbung = db.query(Bewerbung).filter(Bewerbung.id == id).first()
+    if bewerbung:
+        db.delete(bewerbung)
+        db.commit()
+        return {"message": "Bewerbung deleted"}
+    return {"error": "Bewerbung not found"}
+
 @app.post("/update-feedback")
 async def update_feedback(request: Request, db: Session = Depends(get_db)):
     data = await request.json()

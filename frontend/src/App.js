@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 function App() {
   const [url, setUrl] = useState('');
@@ -142,11 +143,20 @@ function App() {
       });
   };
 
+  const handleDeleteClick = (id) => {
+    fetch(`http://localhost:8000/delete-bewerbung/${id}`, {
+      method: 'DELETE',
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Bewerbung deleted:', data);
+        setBewerbungen(bewerbungen.filter(bewerbung => bewerbung.id !== id));
+      });
+  };
+
   if (!username) {
     return (
       <div className="username-container">
-        <span>Gib hier deinen Nutzernamen ein.</span>
-        <span>Nutze etwas einfaches, da du dich hiermit identifizieren wirst.</span>
         <input
           type="text"
           value={inputUsername}
@@ -162,10 +172,6 @@ function App() {
     <div className="container">
       <div className="list">
         <h2>Deine Bewerbungen</h2>
-        <div className="header">
-          <span>Deine Bewerbung</span>
-          <span>Rückmeldung</span>
-        </div>
         <ul>
           {bewerbungen.map((bewerbungEntry) => (
             <li
@@ -188,6 +194,10 @@ function App() {
                 <option value="positive">positive Rückmeldung</option>
                 <option value="negative">negative Rückmeldung</option>
               </select>
+              <i
+                className="fas fa-trash-alt delete-icon"
+                onClick={() => handleDeleteClick(bewerbungEntry.id)}
+              ></i>
               {hoveredItem === bewerbungEntry.id && (
                 <div className="details">
                   <p>Beworben am: {bewerbungEntry.beworben_am}</p>

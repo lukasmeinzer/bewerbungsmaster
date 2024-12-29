@@ -1,3 +1,13 @@
+.delete-icon {
+  color: red;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.delete-icon:hover {
+  color: darkred;
+}
+
 .username-container {
   display: flex;
   flex-direction: column;
@@ -40,7 +50,7 @@
 }
 
 .list {
-  width: 30%;
+  width: 40%;
   padding: 20px;
   border-right: 1px solid #ccc;
 }
