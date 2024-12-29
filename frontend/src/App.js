@@ -31,11 +31,11 @@ function App() {
     }
   }, [username]);
 
-  const handleInputChange = (event) => {
+  const handleUrlChange = (event) => {
     setUrl(event.target.value);
   };
 
-  const handleConfirmClick = () => {
+  const handleUrlSubmit = () => {
     fetch('http://localhost:8000/submit-url', {
       method: 'POST',
       headers: {
@@ -177,10 +177,10 @@ function App() {
           <input
             type="text"
             value={url}
-            onChange={handleInputChange}
+            onChange={handleUrlChange}
             placeholder="Enter URL"
           />
-          <button onClick={handleConfirmClick}>Confirm</button>
+          <button onClick={handleUrlSubmit}>Confirm</button>
         </div>
       </div>
       <div className="username-display">
