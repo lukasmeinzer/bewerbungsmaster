@@ -66,12 +66,21 @@ async def update_feedback(request: Request, db: Session = Depends(get_db)):
     bewerbung_id = data.get("id")
     feedback = data.get("feedback")
     db_bewerbung: Bewerbung = db.query(Bewerbung).filter(Bewerbung.id == bewerbung_id).first()
-    now = datetime.now(tz=pytz.timezone("Europe/Berlin")).strftime("%Y-%m-%d %H:%M:%S")
-    if db_bewerbung:
+    if not db_bewerbung:
+        return {"error": "Bewerbung nicht gefunden"}
+    if feedback in ["positive", "negative"]:
+        now = datetime.now(tz=pytz.timezone("Europe/Berlin")).strftime("%Y-%m-%d %H:%M:%S")
         db_bewerbung.rückmeldung_positiv = feedback == "positive"
         db_bewerbung.rückmeldung_negativ = feedback == "negative"
         db_bewerbung.rückmeldung_erhalten = True
         db_bewerbung.rückmeldung_erhalten_am = now
+        db.commit()
+        db.refresh(db_bewerbung)
+    else:
+        db_bewerbung.rückmeldung_positiv = False
+        db_bewerbung.rückmeldung_negativ = False
+        db_bewerbung.rückmeldung_erhalten = False
+        db_bewerbung.rückmeldung_erhalten_am = ""
         db.commit()
         db.refresh(db_bewerbung)
     return {"message": f"Feedback updated for URL ID: {bewerbung_id}"}
