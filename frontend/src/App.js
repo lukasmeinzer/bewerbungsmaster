@@ -9,6 +9,8 @@ function App() {
   const [hoverTimeout, setHoverTimeout] = useState(null);
   const [username, setUsername] = useState(localStorage.getItem('username') || '');
   const [inputUsername, setInputUsername] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [complaint, setComplaint] = useState('');
 
   useEffect(() => {
     if (username) {
@@ -110,6 +112,36 @@ function App() {
     setUsername(inputUsername);
   };
 
+  const handleErrorButtonClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setComplaint("");
+  };
+
+  const handleComplaintChange = (event) => {
+    setComplaint("");
+    setComplaint(event.target.value);
+  };
+
+  const handleComplaintSubmit = () => {
+    fetch('http://localhost:8000/submit-complaint', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, complaint }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Complaint submitted:', data);
+        setIsModalOpen(false);
+        setComplaint("");
+      });
+  };
+
   if (!username) {
     return (
       <div className="username-container">
@@ -181,11 +213,26 @@ function App() {
             placeholder="Enter URL"
           />
           <button onClick={handleUrlSubmit}>Confirm</button>
+          <button className="error-button" onClick={handleErrorButtonClick}>Etwas funktioniert nicht?</button>
         </div>
       </div>
       <div className="username-display">
         Username: {username}
       </div>
+      {isModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Problem einreichen</h2>
+            <textarea
+              value={complaint}
+              onChange={handleComplaintChange}
+              placeholder="Beschreiben Sie Ihr Problem"
+            />
+            <button onClick={handleComplaintSubmit}>Absenden</button>
+            <button onClick={handleModalClose}>Schließen</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

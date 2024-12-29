@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from datetime import datetime
 import pytz
 
-from database import SessionLocal, Bewerbung, engine
+from database import SessionLocal, Bewerbung, Complaint
 from scraping import extract_data
 
 
@@ -25,6 +25,27 @@ def get_db():
         yield db
     finally:
         db.close()
+        
+@app.get("/ping")
+async def ping():
+    return {"ping": "pong"}
+
+@app.post("/submit-complaint")
+async def submit_complaint(request: Request, db: Session = Depends(get_db)):
+    data = await request.json()
+    username = data.get("username")
+    complaint = data.get("complaint")
+    now = datetime.now(tz=pytz.timezone("Europe/Berlin")).strftime("%Y-%m-%d %H:%M:%S")
+    
+    db_complaint = Complaint(
+        username=username,
+        complaint=complaint,
+        complaint_received=now
+    )
+    db.add(db_complaint)
+    db.commit()
+    db.refresh(db_complaint)
+    return {"message": "Complaint received"}
 
 @app.post("/submit-url")
 async def submit_url(request: Request, db: Session = Depends(get_db)):

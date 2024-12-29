@@ -22,4 +22,12 @@ class Bewerbung(Base):
     rückmeldung_positiv = Column(Boolean)
     rückmeldung_negativ = Column(Boolean)
 
+class Complaint(Base):
+    __tablename__ = "Complaints"
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    username = Column(String, index=True)
+    complaint = Column(String)
+    complaint_received = Column(String) # Datum und Uhrzeit
+
+
 Base.metadata.create_all(bind=engine)

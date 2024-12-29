@@ -18,6 +18,21 @@
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
+.error-button {
+  background-color: #ffcccc; /* Light red background */
+  color: #333; /* Dark text color */
+  border: none;
+  padding: 10px 20px;
+  margin-top: 150px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.error-button:hover {
+  background-color: #f86767; /* Darker red on hover */
+}
+
 .container {
   display: flex;
   flex-direction: row;
@@ -87,4 +102,39 @@
 
 .list-item:hover .details {
   display: block;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+  width: 400px;
+  max-width: 90%;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+}
+
+.modal-content textarea {
+  width: 100%;
+  height: 100px;
+  margin-bottom: 10px;
+}
+
+.modal-content button {
+  margin-right: 10px;
 }
