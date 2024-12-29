@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from datetime import datetime
 import pytz
 
-from database import SessionLocal, Bewerbung, Complaint
+from models import SessionLocal, BewerbungModel, ComplaintModel
 from scraping import extract_data
 
 
@@ -37,7 +37,7 @@ async def submit_complaint(request: Request, db: Session = Depends(get_db)):
     complaint = data.get("complaint")
     now = datetime.now(tz=pytz.timezone("Europe/Berlin")).strftime("%Y-%m-%d %H:%M:%S")
     
-    db_complaint = Complaint(
+    db_complaint = ComplaintModel(
         username=username,
         complaint=complaint,
         complaint_received=now
@@ -53,7 +53,7 @@ async def submit_url(request: Request, db: Session = Depends(get_db)):
     url = data.get("url").strip()
     username = data.get("username").strip()
     
-    url_vorhanden = db.query(Bewerbung).filter(Bewerbung.url == url).first()
+    url_vorhanden = db.query(BewerbungModel).filter(BewerbungModel.url == url).first()
     if url_vorhanden:
         return {"error": "URL bereits vorhanden"}
     
@@ -63,7 +63,7 @@ async def submit_url(request: Request, db: Session = Depends(get_db)):
         return {"error": f"Error while extracting data: {e}"}
     
     now = datetime.now(tz=pytz.timezone("Europe/Berlin")).strftime("%Y-%m-%d %H:%M:%S")
-    db_bewerbung = Bewerbung(
+    db_bewerbung = BewerbungModel(
         url=url,
         username=username,
         beworben_am=now,
@@ -79,12 +79,12 @@ async def submit_url(request: Request, db: Session = Depends(get_db)):
 
 @app.get("/bewerbungen")
 def get_bewerbungen(username:str, db: Session = Depends(get_db)):
-    bewerbungen = db.query(Bewerbung).filter(Bewerbung.username == username).all()
+    bewerbungen = db.query(BewerbungModel).filter(BewerbungModel.username == username).all()
     return bewerbungen
 
 @app.delete("/delete-bewerbung/{id}")
 async def delete_bewerbung(id: int, db: Session = Depends(get_db)):
-    bewerbung = db.query(Bewerbung).filter(Bewerbung.id == id).first()
+    bewerbung = db.query(BewerbungModel).filter(BewerbungModel.id == id).first()
     if bewerbung:
         db.delete(bewerbung)
         db.commit()
@@ -96,7 +96,7 @@ async def update_feedback(request: Request, db: Session = Depends(get_db)):
     data = await request.json()
     bewerbung_id = data.get("id")
     feedback = data.get("feedback")
-    db_bewerbung: Bewerbung = db.query(Bewerbung).filter(Bewerbung.id == bewerbung_id).first()
+    db_bewerbung: BewerbungModel = db.query(BewerbungModel).filter(BewerbungModel.id == bewerbung_id).first()
     if not db_bewerbung:
         return {"error": "Bewerbung nicht gefunden"}
     if feedback in ["positive", "negative"]:

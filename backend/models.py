@@ -8,7 +8,7 @@ engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
-class Bewerbung(Base):
+class BewerbungModel(Base):
     __tablename__ = "Bewerbungen"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     url = Column(String, index=True)
@@ -22,7 +22,7 @@ class Bewerbung(Base):
     rückmeldung_positiv = Column(Boolean)
     rückmeldung_negativ = Column(Boolean)
 
-class Complaint(Base):
+class ComplaintModel(Base):
     __tablename__ = "Complaints"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     username = Column(String, index=True)
