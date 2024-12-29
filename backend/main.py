@@ -33,14 +33,21 @@ def read_root():
 @app.post("/submit-url")
 async def submit_url(request: Request, db: Session = Depends(get_db)):
     data = await request.json()
-    url = data.get("url")
+    url = data.get("url").strip()
     
-    # extracted_url = extract_data(url)
+    url_vorhanden = db.query(Bewerbung).filter(Bewerbung.url == url).first()
+    if url_vorhanden:
+        return {"error": "URL bereits vorhanden"}
+    
+    extracted_url = extract_data(url)
     
     now = datetime.now(tz=pytz.timezone("Europe/Berlin")).strftime("%Y-%m-%d %H:%M:%S")
     db_bewerbung = Bewerbung(
         url=url,
         beworben_am=now,
+        firmenname=extracted_url.get("company_name"),
+        jobtitel=extracted_url.get("job_title"),
+        ort=extracted_url.get("location"),
     )
     db.add(db_bewerbung)
     db.commit()
