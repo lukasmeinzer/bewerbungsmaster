@@ -15,7 +15,7 @@ function App() {
 
   useEffect(() => {
     if (username) {
-      fetch(`http://localhost:8000/bewerbungen?username=${username}`)
+      fetch(`http://87.106.165.63:8000/bewerbungen?username=${username}`)
         .then(response => response.json())
         .then(data => {
           setBewerbungen(data);
@@ -39,7 +39,7 @@ function App() {
   };
 
   const handleUrlSubmit = () => {
-    fetch('http://localhost:8000/submit-url', {
+    fetch('http://87.106.165.63:8000/submit-url', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ function App() {
         console.log(data.message);
         setUrl('');
         // Fetch the updated list of URLs
-        fetch(`http://localhost:8000/bewerbungen?username=${username}`)
+        fetch(`http://87.106.165.63:8000/bewerbungen?username=${username}`)
           .then(response => response.json())
           .then(data => {
             setBewerbungen(data);
@@ -79,7 +79,7 @@ function App() {
     console.log(`URL ID: ${id}, Rückmeldung: ${value}`);
 
     // Send the selected value to the backend
-    fetch('http://localhost:8000/update-feedback', {
+    fetch('http://87.106.165.63:8000/update-feedback', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -128,7 +128,7 @@ function App() {
   };
 
   const handleComplaintSubmit = () => {
-    fetch('http://localhost:8000/submit-complaint', {
+    fetch('http://87.106.165.63:8000/submit-complaint', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -144,7 +144,7 @@ function App() {
   };
 
   const handleDeleteClick = (id) => {
-    fetch(`http://localhost:8000/delete-bewerbung/${id}`, {
+    fetch(`http://87.106.165.63:8000/delete-bewerbung/${id}`, {
       method: 'DELETE',
     })
       .then(response => response.json())
