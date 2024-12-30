@@ -1,0 +1,22 @@
+name: Deploy Webapp
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Build and Run Docker Container
+      run: |
+        ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} << EOF
+          cd git_local/noah
+          git pull
+          docker compose down || true
+          docker compose up -d --build
+        EOF
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
