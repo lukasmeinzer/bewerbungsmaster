@@ -16,11 +16,11 @@ jobs:
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa 
         chmod 600 ~/.ssh/id_rsa       
         ssh-keyscan -H "${{ secrets.SERVER_IP }}" >> ~/.ssh/known_hosts
-        
+
     - name: Build and Run Docker Container
       run: |
         ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} << EOF
-          cd git_local/noah
+          cd git_local/bewerbungsmaster
           git pull
           docker compose down || true
           docker compose up -d --build
