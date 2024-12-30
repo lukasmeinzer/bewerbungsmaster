@@ -233,11 +233,13 @@ function App() {
         <div className="modal">
           <div className="modal-content">
             <h2>Problem einreichen</h2>
+            <h5>(max. 500 Zeichen)</h5>
             <textarea
               value={complaint}
               onChange={handleComplaintChange}
               placeholder="Beschreiben Sie Ihr Problem"
-            />
+              />
+            <br />
             <button onClick={handleComplaintSubmit}>Absenden</button>
             <button onClick={handleModalClose}>Schließen</button>
           </div>

@@ -12,6 +12,7 @@ SQLAlchemy = "^2.0.36"
 pytz = "^2024.2"
 beautifulsoup4 = "^4.12.3"
 requests = "^2.32.3"
+PyMySQL = "^1.1.1"
 
 [tool.poetry.dev-dependencies]
 
