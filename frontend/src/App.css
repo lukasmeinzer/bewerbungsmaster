@@ -50,9 +50,9 @@
 }
 
 .list {
-  width: 40%;
+  width: 50%;
   padding: 20px;
-  border-right: 1px solid #ccc;
+  border-left: 1px solid #ccc;
 }
 
 .content {
@@ -60,7 +60,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 70%;
+  width: 60%;
   text-align: center;
 }
 
@@ -147,4 +147,45 @@
 
 .modal-content button {
   margin-right: 10px;
+}
+
+/* Media Queries for Mobile Devices */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .list {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .content {
+    width: 100%;
+    padding: 10px; /* Add padding for mobile */
+  }
+
+  .input-container {
+    padding: 10px; /* Add padding for mobile */
+  }
+
+  .input-container input {
+    width: 90%; /* Adjust the width for mobile */
+    margin-bottom: 5px; /* Reduce margin for mobile */
+  }
+
+  .input-container button {
+    padding: 8px 16px; /* Adjust padding for mobile */
+  }
+
+  .username-display {
+    font-size: 16px; /* Adjust font size for mobile */
+    padding: 5px 10px; /* Adjust padding for mobile */
+  }
+
+  .error-button {
+    margin-top: 20px; /* Reduce margin for mobile */
+  }
 }

@@ -170,47 +170,6 @@ function App() {
 
   return (
     <div className="container">
-      <div className="list">
-        <h2>Deine Bewerbungen</h2>
-        <ul>
-          {bewerbungen.map((bewerbungEntry) => (
-            <li
-              key={bewerbungEntry.id}
-              className="list-item"
-              style={{
-                color: feedback[bewerbungEntry.id] === 'positive' ? 'green' :
-                       feedback[bewerbungEntry.id] === 'negative' ? 'red' : 'black',
-              }}
-              onMouseEnter={() => handleMouseEnter(bewerbungEntry.id)}
-              onMouseLeave={handleMouseLeave}
-            >
-            <span>{bewerbungEntry.firmenname}</span>
-            <span>{bewerbungEntry.jobtitel}</span>
-              <select
-                value={feedback[bewerbungEntry.id] || ''}
-                onChange={(event) => handleDropdownChange(bewerbungEntry.id, event)}
-              >
-                <option value=""></option>
-                <option value="positive">positive Rückmeldung</option>
-                <option value="negative">negative Rückmeldung</option>
-              </select>
-              <i
-                className="fas fa-trash-alt delete-icon"
-                onClick={() => handleDeleteClick(bewerbungEntry.id)}
-              ></i>
-              {hoveredItem === bewerbungEntry.id && (
-                <div className="details">
-                  <p>Beworben am: {bewerbungEntry.beworben_am}</p>
-                  <p>Ort: {bewerbungEntry.ort}</p>
-                  <p>Rückmeldung erhalten: {bewerbungEntry.rückmeldung_erhalten ? 'Ja' : 'Nein'}</p>
-                  <p>Rückmeldung erhalten am: {bewerbungEntry.rückmeldung_erhalten_am}</p>
-                  <p>URL: <a href={bewerbungEntry.url} target="_blank" rel="noopener noreferrer">{bewerbungEntry.url}</a></p>
-                </div>
-              )}
-            </li>
-          ))}
-        </ul>
-      </div>
       <div className="content">
         <h1>Bewerbungsmaster</h1>
         <h3>Gib im untenstehenden Eingabefeld die URL zur ausgeschriebenen Stelle ein.</h3>
@@ -228,6 +187,47 @@ function App() {
       </div>
       <div className="username-display">
         Username: {username}
+      </div>
+      <div className="list">
+        <h2>Deine Bewerbungen du huso</h2>
+        <ul>
+          {bewerbungen.map((bewerbungEntry) => (
+            <li
+              key={bewerbungEntry.id}
+              className="list-item"
+              style={{
+                color: feedback[bewerbungEntry.id] === 'positive' ? 'green' :
+                       feedback[bewerbungEntry.id] === 'negative' ? 'red' : 'black',
+              }}
+              onMouseEnter={() => handleMouseEnter(bewerbungEntry.id)}
+              onMouseLeave={handleMouseLeave}
+              >
+            <span>{bewerbungEntry.firmenname}</span>
+            <span>{bewerbungEntry.jobtitel}</span>
+              <select
+                value={feedback[bewerbungEntry.id] || ''}
+                onChange={(event) => handleDropdownChange(bewerbungEntry.id, event)}
+              >
+                <option value=""></option>
+                <option value="positive">positive Rückmeldung</option>
+                <option value="negative">negative Rückmeldung</option>
+              </select>
+              <i
+                className="fas fa-trash-alt delete-icon"
+                onClick={() => handleDeleteClick(bewerbungEntry.id)}
+                ></i>
+              {hoveredItem === bewerbungEntry.id && (
+                <div className="details">
+                  <p>Beworben am: {bewerbungEntry.beworben_am}</p>
+                  <p>Ort: {bewerbungEntry.ort}</p>
+                  <p>Rückmeldung erhalten: {bewerbungEntry.rückmeldung_erhalten ? 'Ja' : 'Nein'}</p>
+                  <p>Rückmeldung erhalten am: {bewerbungEntry.rückmeldung_erhalten_am}</p>
+                  <p>URL: <a href={bewerbungEntry.url} target="_blank" rel="noopener noreferrer">{bewerbungEntry.url}</a></p>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
       </div>
       {isModalOpen && (
         <div className="modal">
