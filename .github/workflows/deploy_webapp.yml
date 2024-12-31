@@ -20,12 +20,10 @@ jobs:
     - name: Add GitHub to known_hosts
       run: |
         ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
-        EOF
 
     - name: Test SSH Connection
       run: |
         ssh -o StrictHostKeyChecking=no git@github.com
-        EOF
 
     - name: Pull Repository on Server
       run: |
