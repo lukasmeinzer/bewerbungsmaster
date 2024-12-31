@@ -28,8 +28,6 @@ class ComplaintModel(Base):
     complaint_received = Column(String(50)) # Datum und Uhrzeit
 
 
-
-# DATABASE_URL = "sqlite:///./backend.db"
 DATABASE_URL = os.getenv("DATABASE_URL_dev")
 
 engine = create_engine(DATABASE_URL, pool_pre_ping=True, pool_recycle=3600)

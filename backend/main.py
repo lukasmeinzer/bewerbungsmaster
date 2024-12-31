@@ -4,8 +4,8 @@ from sqlalchemy.orm import Session
 from datetime import datetime
 import pytz
 
-from models import SessionLocal, BewerbungModel, ComplaintModel
-from scraping import extract_data
+from backend.models import SessionLocal, BewerbungModel, ComplaintModel
+from backend.scraping import extract_data
 
 
 app = FastAPI()
