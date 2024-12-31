@@ -23,7 +23,7 @@ jobs:
 
     - name: Test SSH Connection
       run: |
-        ssh -o StrictHostKeyChecking=no git@github.com << EOF
+        git ls-remote git@github.com:lukasmeinzer/bewerbungsmaster.git
 
     - name: Pull Repository on Server
       run: |
