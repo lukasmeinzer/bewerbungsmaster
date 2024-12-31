@@ -69,7 +69,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  margin-top: 20px; /* Reduce margin for less spacing */
   text-align: center;
 }
 
@@ -158,13 +158,13 @@
 
   .list {
     width: 100%;
-    border-right: none;
-    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #ccc;
   }
 
   .content {
     width: 100%;
     padding: 10px; /* Add padding for mobile */
+    margin-top: 10px; /* Reduce margin for mobile */
   }
 
   .input-container {
@@ -188,4 +188,12 @@
   .error-button {
     margin-top: 20px; /* Reduce margin for mobile */
   }
+}
+
+/* Fixed width for table columns */
+.fixed-width {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

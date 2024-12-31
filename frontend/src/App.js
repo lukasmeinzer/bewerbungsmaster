@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { ThemeProvider } from '@mui/material/styles';
+import { Container, Typography, TextField, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import theme from './theme';
 import './App.css';
-import '@fortawesome/fontawesome-free/css/all.min.css';
 
 function App() {
   const [url, setUrl] = useState('');
@@ -156,96 +158,93 @@ function App() {
 
   if (!username) {
     return (
-      <div className="username-container">
-        <input
-          type="text"
-          value={inputUsername}
-          onChange={handleUsernameChange}
-          placeholder="Enter your username"
-        />
-        <button onClick={handleUsernameSubmit}>Submit</button>
-      </div>
+      <ThemeProvider theme={theme}>
+        <Container maxWidth="sm" style={{ textAlign: 'center', marginTop: '20vh' }}>
+          <TextField
+            label="Enter your username"
+            value={inputUsername}
+            onChange={handleUsernameChange}
+            fullWidth
+            margin="normal"
+          />
+          <Button variant="contained" color="primary" onClick={handleUsernameSubmit}>
+            Submit
+          </Button>
+        </Container>
+      </ThemeProvider>
     );
   }
 
   return (
-    <div className="container">
-      <div className="content">
-        <h1>Bewerbungsmaster</h1>
-        <h3>Gib im untenstehenden Eingabefeld die URL zur ausgeschriebenen Stelle ein.</h3>
-        <span>(Linkedin URLs funktionieren nicht)</span>
+    <ThemeProvider theme={theme}>
+      <Container maxWidth="md">
+        <Typography variant="h1" align="center" gutterBottom>
+          Bewerbungsmaster
+        </Typography>
+        <Typography variant="h5" align="center" gutterBottom>
+          Gib im untenstehenden Eingabefeld die URL zur ausgeschriebenen Stelle ein.
+        </Typography>
+        <Typography variant="body1" align="center" gutterBottom>
+          (Linkedin URLs funktionieren nicht)
+        </Typography>
         <div className="input-container">
-          <input
-            type="text"
+          <TextField
+            label="Enter URL"
             value={url}
             onChange={handleUrlChange}
-            placeholder="Enter URL"
+            fullWidth
+            margin="normal"
           />
-          <button onClick={handleUrlSubmit}>Confirm</button>
-          <button className="error-button" onClick={handleErrorButtonClick}>Etwas funktioniert nicht?</button>
+          <Button variant="contained" color="primary" onClick={handleUrlSubmit}>
+            Confirm
+          </Button>
+          <Button variant="outlined" color="secondary" onClick={handleErrorButtonClick}>
+            Etwas funktioniert nicht?
+          </Button>
         </div>
-      </div>
-      <div className="username-display">
-        Username: {username}
-      </div>
-      <div className="list">
-        <h2>Deine Bewerbungen du huso</h2>
-        <ul>
-          {bewerbungen.map((bewerbungEntry) => (
-            <li
-              key={bewerbungEntry.id}
-              className="list-item"
-              style={{
-                color: feedback[bewerbungEntry.id] === 'positive' ? 'green' :
-                       feedback[bewerbungEntry.id] === 'negative' ? 'red' : 'black',
-              }}
-              onMouseEnter={() => handleMouseEnter(bewerbungEntry.id)}
-              onMouseLeave={handleMouseLeave}
-              >
-            <span>{bewerbungEntry.firmenname}</span>
-            <span>{bewerbungEntry.jobtitel}</span>
-              <select
-                value={feedback[bewerbungEntry.id] || ''}
-                onChange={(event) => handleDropdownChange(bewerbungEntry.id, event)}
-              >
-                <option value=""></option>
-                <option value="positive">positive Rückmeldung</option>
-                <option value="negative">negative Rückmeldung</option>
-              </select>
-              <i
-                className="fas fa-trash-alt delete-icon"
-                onClick={() => handleDeleteClick(bewerbungEntry.id)}
-                ></i>
-              {hoveredItem === bewerbungEntry.id && (
-                <div className="details">
-                  <p>Beworben am: {bewerbungEntry.beworben_am}</p>
-                  <p>Ort: {bewerbungEntry.ort}</p>
-                  <p>Rückmeldung erhalten: {bewerbungEntry.rückmeldung_erhalten ? 'Ja' : 'Nein'}</p>
-                  <p>Rückmeldung erhalten am: {bewerbungEntry.rückmeldung_erhalten_am}</p>
-                  <p>URL: <a href={bewerbungEntry.url} target="_blank" rel="noopener noreferrer">{bewerbungEntry.url}</a></p>
-                </div>
-              )}
-            </li>
-          ))}
-        </ul>
-      </div>
-      {isModalOpen && (
-        <div className="modal">
-          <div className="modal-content">
-            <h2>Problem einreichen</h2>
-            <h5>(max. 500 Zeichen)</h5>
-            <textarea
-              value={complaint}
-              onChange={handleComplaintChange}
-              placeholder="Beschreiben Sie Ihr Problem"
-              />
-            <br />
-            <button onClick={handleComplaintSubmit}>Absenden</button>
-            <button onClick={handleModalClose}>Schließen</button>
-          </div>
-        </div>
-      )}
-    </div>
+        <Typography variant="body2" align="right" gutterBottom>
+          Username: {username}
+        </Typography>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Unternehmen</TableCell>
+                <TableCell>Jobtitle</TableCell>
+                <TableCell>Feedback</TableCell>
+                <TableCell></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {bewerbungen.map((bewerbungEntry) => (
+                <TableRow key={bewerbungEntry.id}>
+                  <TableCell>{bewerbungEntry.firmenname}</TableCell>
+                  <TableCell>{bewerbungEntry.jobtitel}</TableCell>
+                  <TableCell>
+                    <FormControl fullWidth>
+                      <InputLabel>Feedback</InputLabel>
+                      <Select
+                        value={feedback[bewerbungEntry.id] || ''}
+                        onChange={(event) => handleDropdownChange(bewerbungEntry.id, event)}
+                      >
+                        <MenuItem value=""></MenuItem>
+                        <MenuItem value="positive">positive Rückmeldung</MenuItem>
+                        <MenuItem value="negative">negative Rückmeldung</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </TableCell>
+                  <TableCell>
+                    <Button variant="contained" color="secondary" onClick={() => handleDeleteClick(bewerbungEntry.id)}>
+                      Delete
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Container>
+    </ThemeProvider>
   );
 }
 
