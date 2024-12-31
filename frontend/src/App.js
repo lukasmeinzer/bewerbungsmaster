@@ -9,6 +9,7 @@ function App() {
   const [bewerbungen, setBewerbungen] = useState([]);
   const [feedback, setFeedback] = useState({});
   const [hoveredItem, setHoveredItem] = useState(null);
+  const [hoveredDetails, setHoveredDetails] = useState(false);
   const [hoverTimeout, setHoverTimeout] = useState(null);
   const [username, setUsername] = useState(localStorage.getItem('username') || '');
   const [inputUsername, setInputUsername] = useState('');
@@ -95,6 +96,7 @@ function App() {
   };
 
   const handleMouseEnter = (id) => {
+    if (hoverTimeout) clearTimeout(hoverTimeout);
     const timeout = setTimeout(() => {
       setHoveredItem(id);
     }, 1200);
@@ -102,6 +104,19 @@ function App() {
   };
 
   const handleMouseLeave = () => {
+    if (!hoveredDetails) {
+      clearTimeout(hoverTimeout);
+      setHoveredItem(null);
+    }
+  };
+  
+  // To keep the details open when the mouse is over the details field
+  const handleDetailsMouseEnter = () => {
+    setHoveredDetails(true);
+  };
+  
+  const handleDetailsMouseLeave = () => {
+    setHoveredDetails(false);
     clearTimeout(hoverTimeout);
     setHoveredItem(null);
   };
@@ -209,42 +224,109 @@ function App() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Unternehmen</TableCell>
-                <TableCell>Jobtitle</TableCell>
-                <TableCell>Feedback</TableCell>
+                <TableCell sx={{ fontWeight: 'bold' }}>Unternehmen</TableCell>
+                <TableCell sx={{ fontWeight: 'bold' }}>Jobtitle</TableCell>
+                <TableCell sx={{ fontWeight: 'bold' }}>Feedback</TableCell>
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {bewerbungen.map((bewerbungEntry) => (
-                <TableRow key={bewerbungEntry.id}>
-                  <TableCell>{bewerbungEntry.firmenname}</TableCell>
-                  <TableCell>{bewerbungEntry.jobtitel}</TableCell>
-                  <TableCell>
-                    <FormControl fullWidth>
-                      <InputLabel>Feedback</InputLabel>
-                      <Select
-                        value={feedback[bewerbungEntry.id] || ''}
-                        onChange={(event) => handleDropdownChange(bewerbungEntry.id, event)}
-                      >
-                        <MenuItem value=""></MenuItem>
-                        <MenuItem value="positive">positive Rückmeldung</MenuItem>
-                        <MenuItem value="negative">negative Rückmeldung</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </TableCell>
-                  <TableCell>
-                    <Button variant="contained" color="secondary" onClick={() => handleDeleteClick(bewerbungEntry.id)}>
-                      Delete
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
+      {bewerbungen.map((bewerbungEntry) => (
+        <React.Fragment key={bewerbungEntry.id}>
+          <TableRow
+            onMouseEnter={() => handleMouseEnter(bewerbungEntry.id)}
+            onMouseLeave={handleMouseLeave}
+            style={{
+              backgroundColor:
+                feedback[bewerbungEntry.id] === 'positive'
+                  ? '#e6f7e6' // Light green
+                  : feedback[bewerbungEntry.id] === 'negative'
+                  ? '#fdecec' // Light red
+                  : 'transparent',
+            }}
+          >
+            <TableCell>{bewerbungEntry.firmenname}</TableCell>
+            <TableCell>{bewerbungEntry.jobtitel}</TableCell>
+            <TableCell>
+              <FormControl fullWidth>
+                <Select
+                  value={feedback[bewerbungEntry.id] || ''}
+                  onChange={(event) => handleDropdownChange(bewerbungEntry.id, event)}
+                >
+                  <MenuItem value=""></MenuItem>
+                  <MenuItem value="positive">positive Rückmeldung</MenuItem>
+                  <MenuItem value="negative">negative Rückmeldung</MenuItem>
+                </Select>
+              </FormControl>
+            </TableCell>
+            <TableCell>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => handleDeleteClick(bewerbungEntry.id)}
+              >
+                Entfernen
+              </Button>
+            </TableCell>
+          </TableRow>
+
+          {/* Display additional details when hovering */}
+          {hoveredItem === bewerbungEntry.id && (
+            <div
+            className="details"
+            onMouseEnter={handleDetailsMouseEnter}
+            onMouseLeave={handleDetailsMouseLeave}
+          >
+            <table>
+              <tbody>
+                <tr>
+                  <td><strong>Beworben am:</strong></td>
+                  <td>{bewerbungEntry.beworben_am}</td>
+                </tr>
+                <tr>
+                  <td><strong>Ort:</strong></td>
+                  <td>{bewerbungEntry.ort}</td>
+                </tr>
+                <tr>
+                  <td><strong>Rückmeldung erhalten:</strong></td>
+                  <td>{bewerbungEntry.rückmeldung_erhalten ? 'Ja' : 'Nein'}</td>
+                </tr>
+                <tr>
+                  <td><strong>Rückmeldung erhalten am:</strong></td>
+                  <td>{bewerbungEntry.rückmeldung_erhalten_am}</td>
+                </tr>
+                <tr>
+                  <td><strong>URL:</strong></td>
+                  <td><a href={bewerbungEntry.url} target="_blank" rel="noopener noreferrer">{bewerbungEntry.url}</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          )}
+        </React.Fragment>
+      ))}
+    </TableBody>
           </Table>
         </TableContainer>
       </Container>
+      {isModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Problem einreichen</h2>
+            <h5>(max. 500 Zeichen)</h5>
+            <textarea
+              value={complaint}
+              onChange={handleComplaintChange}
+              placeholder="Beschreiben Sie Ihr Problem"
+              />
+            <br />
+            <button onClick={handleComplaintSubmit}>Absenden</button>
+            <button onClick={handleModalClose}>Schließen</button>
+          </div>
+        </div>
+      )}
     </ThemeProvider>
+
   );
 }
 
