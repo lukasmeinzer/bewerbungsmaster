@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 
-from backend.scraping_utils import extract_job_title, extract_company_name, extract_location
+from scraping_utils import extract_job_title, extract_company_name, extract_location
 
 def extract_data(url: str) -> dict: 
     if url == "":
