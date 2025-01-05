@@ -6,43 +6,9 @@ on:
       - Tests
 
 jobs:
-  test-backend:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-
-      - name: Set up Docker Compose for Testing
-        run: |
-          docker compose -f backend/docker-compose.test.yml up -d
-
-      - name: Wait for Services to Be Ready
-        run: |
-          for i in {1..10}; do
-            if docker compose -f backend/docker-compose.test.yml logs backend | grep -q "Application startup complete"; then
-              echo "Backend is ready";
-              exit 0;
-            fi;
-            echo "Waiting for backend...";
-            sleep 5;
-          done;
-          echo "Backend failed to start in time";
-          docker compose -f backend/docker-compose.test.yml logs;
-          exit 1;
-
-      - name: Run Tests
-        run: |
-          docker compose -f backend/docker-compose.test.yml exec backend pytest tests/tests.py
-
-      - name: Tear Down Test Environment
-        if: always()
-        run: |
-          docker compose -f backend/docker-compose.test.yml down
-
 
   build-and-deploy:
     runs-on: ubuntu-latest
-    needs: test-backend  # Ensure this job only runs after test-backend succeeds
 
     steps:
     - name: Set up SSH key
@@ -62,3 +28,13 @@ jobs:
         EOF
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+
+  test-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Pytests inside the container
+      run: |
+        ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} << EOF
+          docker exec -t $(docker ps -q --filter "name=backend_bewerbungsmaster") bash -c "cd /path/to/your/backend/tests && pytest tests.py"
+        EOF
