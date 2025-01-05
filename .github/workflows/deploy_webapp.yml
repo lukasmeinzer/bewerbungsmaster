@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Run Pytests inside the container
-    run: |
-      ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} << EOF
-        docker exec -t $(docker ps -q --filter "name=backend_bewerbungsmaster") bash -c "cd /path/to/your/backend/tests && pytest tests.py"
-      EOF
+      run: |
+        ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} << EOF
+          docker exec -t $(docker ps -q --filter "name=backend_bewerbungsmaster") bash -c "cd /path/to/your/backend/tests && pytest tests.py"
+        EOF
