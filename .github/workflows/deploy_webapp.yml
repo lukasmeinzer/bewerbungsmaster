@@ -29,10 +29,6 @@ jobs:
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
-
-  test-backend:
-    runs-on: ubuntu-latest
-    steps:
     - name: Run Pytests inside the container
       run: |
         ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} << EOF
