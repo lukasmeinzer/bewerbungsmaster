@@ -32,12 +32,12 @@ jobs:
     #       git pull
     #     EOF
 
-    # - name: Build Backend Test Image
-    #   run: |
-    #     ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} << EOF
-    #       cd git_local/bewerbungsmaster
-    #       docker build -f backend/Dockerfile -t backend-test ./backend
-    #     EOF
+    - name: Build Backend Test Image
+      run: |
+        ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} << EOF
+          cd git_local/bewerbungsmaster
+          docker build -f backend/Dockerfile -t backend-test ./backend
+        EOF
 
     - name: Run Tests
       run: |
