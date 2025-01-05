@@ -39,8 +39,9 @@ jobs:
           docker ps -q --filter "name=backend_bewerbungsmaster"
           echo "test2"
           id -nG
-          sudo usermod -aG docker $(whoami)
-          id -nG
+          sudo usermod -aG docker runner
+          sudo usermod -aG docker root
+          sudo service docker start
           echo "$(docker ps -q --filter 'name=backend_bewerbungsmaster')"
           echo "test3"
           echo $(sh -c "docker ps -q --filter \"name=backend_bewerbungsmaster\"")
