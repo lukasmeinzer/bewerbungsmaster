@@ -48,7 +48,7 @@ jobs:
           container_id=$(echo "$container_id" | xargs)
           echo $container_id
           echo "test5"
-          docker ps -q --filter "name=backend_bewerbungsmaster"
+          $(docker ps -q --filter "name=backend_bewerbungsmaster")
           
           # If no container found, print error and exit
           if [ -z "$container_id" ]; then
