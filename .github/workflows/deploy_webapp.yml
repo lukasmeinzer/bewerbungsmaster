@@ -14,12 +14,12 @@ jobs:
 
       - name: Set up Docker Compose for Testing
         run: |
-          docker-compose -f backend/docker-compose.test.yml up -d
+          docker compose -f backend/docker-compose.test.yml up -d
 
       - name: Wait for Services to Be Ready
         run: |
           for i in {1..10}; do
-            if docker-compose -f backend/docker-compose.test.yml logs backend | grep -q "Application startup complete"; then
+            if docker compose -f backend/docker-compose.test.yml logs backend | grep -q "Application startup complete"; then
               echo "Backend is ready";
               exit 0;
             fi;
@@ -27,17 +27,17 @@ jobs:
             sleep 5;
           done;
           echo "Backend failed to start in time";
-          docker-compose -f backend/docker-compose.test.yml logs;
+          docker compose -f backend/docker-compose.test.yml logs;
           exit 1;
 
       - name: Run Tests
         run: |
-          docker-compose -f backend/docker-compose.test.yml exec backend pytest tests/tests.py
+          docker compose -f backend/docker-compose.test.yml exec backend pytest tests/tests.py
 
       - name: Tear Down Test Environment
         if: always()
         run: |
-          docker-compose -f backend/docker-compose.test.yml down
+          docker compose -f backend/docker-compose.test.yml down
 
 
   build-and-deploy:
