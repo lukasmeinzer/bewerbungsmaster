@@ -36,7 +36,7 @@ jobs:
           docker ps
           
           # Get the container ID or name (you can adjust this if you need a more specific filter)
-          container_id=$(docker ps -q --filter "name=your_container_name")
+          container_id=$(docker ps -q --filter "name=backend_bewerbungsmaster")
           
           # If no container found, print error and exit
           if [ -z "$container_id" ]; then
