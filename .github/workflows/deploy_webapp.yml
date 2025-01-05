@@ -38,6 +38,7 @@ jobs:
           echo "test"
           docker ps -q --filter "name=backend_bewerbungsmaster"
           echo "test2"
+          id -nG
           echo "$(sudo docker ps -q --filter 'name=backend_bewerbungsmaster')"
           echo "test3"
           echo $(sudo sh -c "docker ps -q --filter \"name=backend_bewerbungsmaster\"")
