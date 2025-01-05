@@ -6,46 +6,40 @@ on:
       - Tests
 
 jobs:
-  test-backend:
+  test_backend:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Set up SSH key
-      run: |
-        mkdir -p ~/.ssh                
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa 
-        chmod 600 ~/.ssh/id_rsa       
-        ssh-keyscan -H "${{ secrets.SERVER_IP }}" >> ~/.ssh/known_hosts
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-    - name: Add GitHub to known_hosts
-      run: |
-        ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts << EOF
+      - name: Build Docker Image
+        run: docker build -f backend/Dockerfile -t backend-test ./backend
 
-    - name: Test SSH Connection
-      run: |
-        git ls-remote git@github.com:lukasmeinzer/bewerbungsmaster.git
+      - name: Start Backend Service
+        run: docker run -d --name backend-test -p 8000:8000 backend-test
 
-    # - name: Pull Repository on Server
-    #   run: |
-    #     ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} << EOF
-    #       cd git_local/bewerbungsmaster
-    #       git pull
-    #     EOF
+      - name: Wait for Backend to Start
+        run: |
+          for i in {1..10}; do
+            if curl -s http://localhost:8000/ping > /dev/null; then
+              echo "Backend is up!";
+              exit 0;
+            fi
+            echo "Waiting for backend...";
+            sleep 3;
+          done;
+          echo "Backend did not start in time.";
+          exit 1
 
-    - name: Build Backend Test Image
-      run: |
-        ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} << EOF
-          cd git_local/bewerbungsmaster
-          docker compose up --build backend/Dockerfile backend-test ./backend
-        EOF
+      - name: Run Tests
+        run: |
+          pip install pytest httpx
+          pytest backend/tests/tests.py
 
-    - name: Run Tests
-      run: |
-        docker exec -it backend-test 
-        pytest backend/tests/tests.py
-        docker run --rm backend-test
-        EOF
-
+      - name: Cleanup
+        if: always()
+        run: docker stop backend-test && docker rm backend-test
 
   build-and-deploy:
     runs-on: ubuntu-latest
