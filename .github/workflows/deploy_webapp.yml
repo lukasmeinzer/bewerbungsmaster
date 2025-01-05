@@ -58,5 +58,5 @@ jobs:
           fi
           
           # Run pytest inside the container
-          docker exec -t "$container_id" bash -c "cd /path/to/your/backend/tests && pytest"
+          docker exec -t "$container_id" bash -c "cd tests && pytest tests.py"
         EOF
