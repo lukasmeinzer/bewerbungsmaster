@@ -36,7 +36,7 @@ jobs:
       run: |
         ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} << EOF
           cd git_local/bewerbungsmaster
-          docker compose up --build backend/Dockerfile -t backend-test ./backend
+          docker compose up --build backend/Dockerfile backend-test ./backend
         EOF
 
     - name: Run Tests
