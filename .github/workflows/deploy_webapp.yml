@@ -32,12 +32,19 @@ jobs:
     - name: Run Pytests inside the container
       run: |
         ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} << EOF
-          # Get the container ID or name
-          container_id=$(docker ps -q --filter "name=backend_bewerbungsmaster")
+          # List all running containers and check the name of your container
+          docker ps
+          
+          # Get the container ID or name (you can adjust this if you need a more specific filter)
+          container_id=$(docker ps -q --filter "name=your_container_name")
+          
+          # If no container found, print error and exit
           if [ -z "$container_id" ]; then
-            echo "Error: No container found."
+            echo "Error: No container found. Available containers:"
+            docker ps
             exit 1
           fi
+          
           # Run pytest inside the container
-          docker exec -t "$container_id" bash -c "cd backend/tests && pytest tests.py"
+          docker exec -t "$container_id" bash -c "cd /path/to/your/backend/tests && pytest"
         EOF
