@@ -43,7 +43,7 @@ jobs:
       run: |
         ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} << EOF
           cd git_local/bewerbungsmaster
-          docker run --rm backend-test pytest tests
+          docker run --rm backend-test pytest backend/tests/tests.py
         EOF
 
 
