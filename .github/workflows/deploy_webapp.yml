@@ -40,6 +40,10 @@ jobs:
           sudo docker ps -q --filter "name=backend_bewerbungsmaster"
           echo "test_ende"
           container_id=$(sudo docker ps -q --filter "name=backend_bewerbungsmaster")
+          echo "test2"
+          echo $container_id
+          container_id=$(echo "$container_id" | xargs)
+          echo $container_id
           
           # If no container found, print error and exit
           if [ -z "$container_id" ]; then
