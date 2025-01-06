@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
-import { Container, Typography, TextField, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Box, Container, Typography, TextField, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import theme from './theme';
 import './App.css';
 
@@ -143,7 +143,7 @@ function App() {
     setComplaint("");
     setComplaint(event.target.value);
   };
-
+  
   const handleComplaintSubmit = () => {
     fetch('http://87.106.165.63:8000/submit-complaint', {
       method: 'POST',
@@ -152,25 +152,31 @@ function App() {
       },
       body: JSON.stringify({ username, complaint }),
     })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Complaint submitted:', data);
-        setIsModalOpen(false);
-        setComplaint("");
-      });
+    .then(response => response.json())
+    .then(data => {
+      console.log('Complaint submitted:', data);
+      setIsModalOpen(false);
+      setComplaint("");
+    });
   };
-
+  
   const handleDeleteClick = (id) => {
     fetch(`http://87.106.165.63:8000/delete-bewerbung/${id}`, {
       method: 'DELETE',
     })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Bewerbung deleted:', data);
-        setBewerbungen(bewerbungen.filter(bewerbung => bewerbung.id !== id));
-      });
+    .then(response => response.json())
+    .then(data => {
+      console.log('Bewerbung deleted:', data);
+      setBewerbungen(bewerbungen.filter(bewerbung => bewerbung.id !== id));
+    });
   };
-
+  
+  const handleLogoutClick = () => {
+    localStorage.setItem('username', "");
+    setUsername("");
+    setInputUsername("");
+  };
+  
   if (!username) {
     return (
       <ThemeProvider theme={theme}>
@@ -217,9 +223,6 @@ function App() {
             Etwas funktioniert nicht?
           </Button>
         </div>
-        <Typography variant="body2" align="right" gutterBottom>
-          Username: {username}
-        </Typography>
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -325,6 +328,16 @@ function App() {
           </div>
         </div>
       )}
+      
+      <Box className="flex-container">
+        <Typography className="username-text">
+          Username: {username}
+        </Typography>
+
+        <Button className="logout-button" onClick={handleLogoutClick}>
+          Ausloggen
+        </Button>
+      </Box>
     </ThemeProvider>
 
   );
