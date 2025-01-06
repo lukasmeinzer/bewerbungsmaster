@@ -200,7 +200,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <Container maxWidth="md">
         <Typography variant="h1" align="center" gutterBottom>
-          Bewerbungsmaster
+          Bewerbungsübersicht
         </Typography>
         <Typography variant="h5" align="center" gutterBottom>
           Gib im untenstehenden Eingabefeld die URL zur ausgeschriebenen Stelle ein.
