@@ -3,7 +3,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { Box, Container, Typography, TextField, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import theme from './theme';
 import './App.css';
-
+ 
 function App() {
   const [url, setUrl] = useState('');
   const [bewerbungen, setBewerbungen] = useState([]);
@@ -15,8 +15,9 @@ function App() {
   const [inputUsername, setInputUsername] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [complaint, setComplaint] = useState('');
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://87.106.165.63:8000/";
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || process.env.REACT_APP_BASE_URL_dev;
 
+  console.log(process.env);
 
   useEffect(() => {
     if (username) {
@@ -148,7 +149,7 @@ function App() {
   
   const handleComplaintSubmit = () => {
     console.log(`API_BASE_URL = ${API_BASE_URL}`)
-    console.log(`process.env = ${process.env}`)
+    console.log(`process.env = ${process.env.REACT_APP_API_BASE_URL}`)
     fetch(`${API_BASE_URL}submit-complaint`, {
       method: 'POST',
       headers: {
