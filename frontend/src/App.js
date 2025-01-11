@@ -147,6 +147,8 @@ function App() {
   };
   
   const handleComplaintSubmit = () => {
+    console.log(`API_BASE_URL = ${API_BASE_URL}`)
+    console.log(`process.env = ${process.env}`)
     fetch(`${API_BASE_URL}submit-complaint`, {
       method: 'POST',
       headers: {
