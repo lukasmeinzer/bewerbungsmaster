@@ -15,8 +15,19 @@ function App() {
   const [inputUsername, setInputUsername] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [complaint, setComplaint] = useState('');
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || process.env.REACT_APP_BASE_URL_dev;
 
+  let API_BASE_URL;
+
+  if (process.env.NODE_ENV === "development") {
+    API_BASE_URL = process.env.REACT_APP_BASE_URL_dev;
+  } else if (process.env.NODE_ENV === "production") {
+    API_BASE_URL = process.env.REACT_APP_BASE_URL_prod;
+  } else {
+    console.error("NODE_ENV not set or not recognized. No API URL!!!");
+  }
+  
+  console.log("API_BASE_URL:", API_BASE_URL);
+  
   console.log(process.env);
 
   useEffect(() => {
