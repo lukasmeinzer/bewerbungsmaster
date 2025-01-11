@@ -25,12 +25,12 @@ def get_db():
         yield db
     finally:
         db.close()
-        
-@app.get("/ping")
+
+@app.get("/api/ping")
 async def ping():
     return {"ping": "pong"}
 
-@app.post("/submit-complaint")
+@app.post("/api/submit-complaint")
 async def submit_complaint(request: Request, db: Session = Depends(get_db)):
     data = await request.json()
     username = data.get("username")
@@ -47,7 +47,7 @@ async def submit_complaint(request: Request, db: Session = Depends(get_db)):
     db.refresh(db_complaint)
     return {"message": "Complaint received"}
 
-@app.post("/submit-url")
+@app.post("/api/submit-url")
 async def submit_url(request: Request, db: Session = Depends(get_db)):
     data = await request.json()
     url = data.get("url").strip()
@@ -77,12 +77,12 @@ async def submit_url(request: Request, db: Session = Depends(get_db)):
     return {"message": f"URL received: {url}"}
 
 
-@app.get("/bewerbungen")
+@app.get("/api/bewerbungen")
 def get_bewerbungen(username:str, db: Session = Depends(get_db)):
     bewerbungen = db.query(BewerbungModel).filter(BewerbungModel.username == username).all()
     return bewerbungen
 
-@app.delete("/delete-bewerbung/{id}")
+@app.delete("/api/delete-bewerbung/{id}")
 async def delete_bewerbung(id: int, db: Session = Depends(get_db)):
     bewerbung = db.query(BewerbungModel).filter(BewerbungModel.id == id).first()
     if bewerbung:
@@ -91,7 +91,7 @@ async def delete_bewerbung(id: int, db: Session = Depends(get_db)):
         return {"message": "Bewerbung deleted"}
     return {"error": "Bewerbung not found"}
 
-@app.post("/update-feedback")
+@app.post("/api/update-feedback")
 async def update_feedback(request: Request, db: Session = Depends(get_db)):
     data = await request.json()
     bewerbung_id = data.get("id")
