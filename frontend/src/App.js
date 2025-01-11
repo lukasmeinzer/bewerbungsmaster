@@ -15,10 +15,12 @@ function App() {
   const [inputUsername, setInputUsername] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [complaint, setComplaint] = useState('');
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://87.106.165.63:8000/";
+
 
   useEffect(() => {
     if (username) {
-      fetch(`http://87.106.165.63:8000/bewerbungen?username=${username}`)
+      fetch(`${API_BASE_URL}bewerbungen?username=${username}`)
         .then(response => response.json())
         .then(data => {
           setBewerbungen(data);
@@ -42,7 +44,7 @@ function App() {
   };
 
   const handleUrlSubmit = () => {
-    fetch('http://87.106.165.63:8000/submit-url', {
+    fetch(`${API_BASE_URL}submit-url`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -54,7 +56,7 @@ function App() {
         console.log(data.message);
         setUrl('');
         // Fetch the updated list of URLs
-        fetch(`http://87.106.165.63:8000/bewerbungen?username=${username}`)
+        fetch(`${API_BASE_URL}bewerbungen?username=${username}`)
           .then(response => response.json())
           .then(data => {
             setBewerbungen(data);
@@ -82,7 +84,7 @@ function App() {
     console.log(`URL ID: ${id}, Rückmeldung: ${value}`);
 
     // Send the selected value to the backend
-    fetch('http://87.106.165.63:8000/update-feedback', {
+    fetch(`${API_BASE_URL}update-feedback`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -145,7 +147,7 @@ function App() {
   };
   
   const handleComplaintSubmit = () => {
-    fetch('http://87.106.165.63:8000/submit-complaint', {
+    fetch(`${API_BASE_URL}submit-complaint`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -161,7 +163,7 @@ function App() {
   };
   
   const handleDeleteClick = (id) => {
-    fetch(`http://87.106.165.63:8000/delete-bewerbung/${id}`, {
+    fetch(`${API_BASE_URL}delete-bewerbung/${id}`, {
       method: 'DELETE',
     })
     .then(response => response.json())
