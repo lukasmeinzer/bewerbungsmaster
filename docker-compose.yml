@@ -43,8 +43,8 @@ services:
     container_name: frontend_bewerbungsmaster
     restart: unless-stopped
     environment:
-      REACT_APP_API_BASE_URL: ${REACT_APP_BASE_URL_prod}
-      test_var: oarschloch
+      - REACT_APP_BASE_URL=${REACT_APP_BASE_URL_prod}
+      - test_var=oarschloch
     ports:
       - "3000:3000"
     depends_on:
