@@ -1,6 +1,20 @@
+from bs4 import BeautifulSoup, Tag
 
-
-def extract_location(url, potential_tags, soup):
+def extract_location(url, potential_tags, soup: BeautifulSoup):
+    if "straumann.com" in url:
+        tag: Tag = soup.find("meta", {"name":"description"})
+        if tag:
+            return tag.get("content")        
+    if "tietalent.com" in url:
+        tag = soup.find(potential_tags, class_="sc-7a1a17bb-0 ffdmJR active-vacancy-introduction__text")
+        return tag.get_text().strip()
+    if "personio.de" in url:
+        tags = (
+            soup
+            .find(potential_tags, class_="detail-subtitle")
+            .find_all("span")[1:]
+        ) 
+        return ", ".join([tag.get_text().strip() for tag in tags])
     location = soup.find(
         potential_tags, 
         id=lambda x: 
@@ -12,6 +26,7 @@ def extract_location(url, potential_tags, soup):
                 or "stadt" in x.lower()
                 or "region" in x.lower()
                 or "job-location" in x.lower()
+                or "arbeitsort" in x.lower()
             )
     )
     if not location:
@@ -62,6 +77,7 @@ def extract_location(url, potential_tags, soup):
                 )
                 and x.lower() not in ["location-unit-container", "locations-container"]}
         )
+        
     # notwendige Eigenbrötler
     if (url == "https://cgi.njoyn.com/corp/xweb/xweb.asp?clid=21001&page=jobdetails&jobid=J1124-1469&BRID=1171014&SBDID=943") or (url == "https://cgi.njoyn.com/corp/xweb/xweb.asp?clid=21001&page=jobdetails&jobid=J1124-2112&BRID=1172433&SBDID=943"):
         location = "Germany, Bayern, München"
@@ -149,6 +165,7 @@ def extract_job_title(url, potential_tags, soup) -> str:
                 or "f/m/d" in x.lower()
                 or "(f/m/d)" in x.lower()
                 or "f/m/x" in x.lower()
+                or "m/w/x" in x.lower()
             )
     )
     if not job_title:
@@ -158,6 +175,18 @@ def extract_job_title(url, potential_tags, soup) -> str:
                 x and 
                 (
                     "job_title" in x.lower()
+                    or "job-title" in x.lower()
+                    or x.lower() == "custheadh1"
+                )
+        )
+    if not job_title:
+        job_title = soup.find(
+            potential_tags, 
+            key=lambda x: 
+                x and 
+                (
+                    "job_title" in x.lower()
+                    or "job-title" in x.lower()
                     or x.lower() == "custheadh1"
                 )
         )
