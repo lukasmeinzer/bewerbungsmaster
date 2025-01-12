@@ -25,10 +25,6 @@ function App() {
   } else {
     console.error("NODE_ENV not set or not recognized. No API URL!!!");
   }
-  
-  console.log("API_BASE_URL:", API_BASE_URL);
-  
-  console.log(process.env);
 
   useEffect(() => {
     if (username) {
